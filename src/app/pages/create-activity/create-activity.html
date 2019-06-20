@@ -1,0 +1,108 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Create Actity</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="onLogout()">
+        Log out
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #CreateActivityForm="ngForm" novalidate>
+    <ion-grid>
+      <!-- 活动名称 -->
+      <ion-label position="stacked" color="primary">活动名称</ion-label>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-input [(ngModel)]="mainForm.name" name="ActityName" type="text" #ActityName="ngModel" spellcheck="false" autocapitalize="off" required> </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-text color="danger">
+        <p [hidden]="ActityName.valid || submitted == false" class="ion-padding-start">
+          Actity name is required
+        </p>
+      </ion-text>
+
+      <!-- 活动时间 -->
+      <ion-label position="stacked" color="primary">活动时间</ion-label>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-datetime required displayFormat="YYYY-MM-DD" picker-format="YYYY-MM-DD" placeholder="Select Date" [(ngModel)]="mainForm.date1" name="date1" #date1="ngModel" autocapitalize="off"></ion-datetime>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-datetime required displayFormat="HH:mm:ss" picker-format="HH:mm:ss" placeholder="Select Time" [(ngModel)]="mainForm.date2" name="date2" #date2="ngModel" autocapitalize="off"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-text color="danger">
+        <p [hidden]="date1.valid || submitted == false" class="ion-padding-start">
+          date1 is wrong
+        </p>
+        <p [hidden]="date2.valid || submitted == false" class="ion-padding-start">
+          date2 is wrong
+        </p>
+      </ion-text>
+
+      <!-- 活动开始 -->
+      <ion-label position="stacked" color="primary">活动开始</ion-label>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-checkbox [(ngModel)]="mainForm.delivery" name="delivery" #delivery="ngModel" autocapitalize="off"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-label position="stacked" color="primary">活动性质</ion-label>
+      <ion-row>
+        <ion-col size="6" *ngFor="let item of actityTypeList">
+          <ion-item>
+            <ion-label position="fixed" color="primary">{{ item.name }}</ion-label>
+            <ion-checkbox color="primary" [(ngModel)]="item.isChecked" name="item.name"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-label position="stacked" color="primary">特殊资源</ion-label>
+      <ion-radio-group [(ngModel)]="mainForm.resource" name="resource">
+        <ion-row>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="fixed" color="primary">线上赞助</ion-label>
+              <ion-radio value="1"></ion-radio>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="fixed" color="primary">线下赞助</ion-label>
+              <ion-radio value="2"></ion-radio>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-radio-group>
+
+      <ion-label position="stacked" color="primary">活动形式</ion-label>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-textarea [(ngModel)]="mainForm.desc" name="desc" placeholder="Enter more information here..."></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="ion-padding">
+      <ion-button (click)="onCreate(CreateActivityForm)" type="submit" expand="block">Create</ion-button>
+    </div>
+  </form>
+</ion-content>

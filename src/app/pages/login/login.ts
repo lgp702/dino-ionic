@@ -3,10 +3,11 @@ import { NgForm } from '@angular/forms'
 import { Router } from '@angular/router'
 
 import { UserData } from '../../providers/user-data'
+import { LoadingSerProvider } from '../../providers/Loading';
 import { UserOptions } from '../../interfaces/user-options'
 
 import { ConfigService } from '../../config/config.service'
-import { ToastController } from '@ionic/angular';
+import { UtilityService } from '../../utility/utility.services'
 
 @Component({
   selector: 'page-login',
@@ -21,20 +22,34 @@ export class LoginPage {
     public userData: UserData,
     public router: Router,
     public confService: ConfigService,
-    public toastCtrl: ToastController
-    ) {}
+    public utility: UtilityService,
+    public loading: LoadingSerProvider
+    ) {
+      this.userData.isLoggedIn().then(loggedIn => {
+        if (loggedIn === true) {
+          this.router.navigateByUrl('/createactivity')
+        }
+      })
+    }
 
   onLogin(form: NgForm) {
     this.submitted = true
 
     if (form.valid) {
+      this.loading.show()
       this.confService.login(this.userInfo).subscribe((data: any) => {
-        if (data && data.code === '000000') {
-          this.notification('Login successfully!')
-          this.userData.login(this.userInfo.name)
-          this.router.navigateByUrl('/app/tabs/schedule')
-        } else {
-          this.notification(data.error.exception || 'error')
+        try {
+          if (data && data.code === '000000') {
+            this.utility.notification('Login successfully!')
+            this.userData.login(this.userInfo.name)
+            this.router.navigateByUrl('/createactivity')
+          } else {
+            this.utility.notification(data.error.exception || 'error')
+          }
+          this.loading.hide()
+        } catch (error) {
+          this.loading.hide()
+          this.utility.notification(error.message)
         }
       })
     }
@@ -42,14 +57,6 @@ export class LoginPage {
 
   onSignup() {
     this.router.navigateByUrl('/signup')
-  }
-
-  async notification(msg: string) {
-    const toast = await this.toastCtrl.create({
-      message: msg || '',
-      duration: 3000
-    });
-    await toast.present();
   }
 
 }

@@ -5,7 +5,7 @@ import { CheckTutorial } from './providers/check-tutorial.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/tutorial',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
@@ -25,13 +25,25 @@ const routes: Routes = [
     loadChildren: './pages/signup/signup.module#SignUpModule'
   },
   {
+    path: 'createactivity',
+    loadChildren: './pages/create-activity/create-activity.module#CreateActivityModule'
+  },
+  {
+    path: 'confirmation',
+    loadChildren: './pages/confirmation/confirmation.module#ConfirmationModule'
+  },
+  {
     path: 'app',
     loadChildren: './pages/tabs-page/tabs-page.module#TabsModule'
   },
   {
     path: 'tutorial',
     loadChildren: './pages/tutorial/tutorial.module#TutorialModule',
-    canLoad: [CheckTutorial]
+    // canLoad: [CheckTutorial]
+  },
+  {
+    path: '*',
+    redirectTo: '/login',
   }
 ];
 

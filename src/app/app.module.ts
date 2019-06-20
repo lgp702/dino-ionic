@@ -12,6 +12,12 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -21,6 +27,14 @@ import { environment } from '../environments/environment';
     IonicStorageModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
+    }),
+    // Add this import here
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: [''],
+        blacklistedRoutes: ['']
+      }
     })
   ],
   declarations: [AppComponent],

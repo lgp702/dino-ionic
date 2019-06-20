@@ -34,6 +34,9 @@
               },
               {
                 "input": "src/global.scss"
+              },
+              {
+                "input": "src/global.less"
               }
             ],
             "scripts": [],
@@ -90,6 +93,9 @@
               },
               {
                 "input": "src/global.scss"
+              },
+              {
+                "input": "src/global.less"
               }
             ],
             "scripts": [],

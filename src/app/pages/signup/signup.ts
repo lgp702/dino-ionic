@@ -6,7 +6,8 @@ import { UserData } from '../../providers/user-data'
 import { UserOptions } from '../../interfaces/user-options'
 
 import { ConfigService } from '../../config/config.service'
-import { ToastController } from '@ionic/angular'
+import { UtilityService } from '../../utility/utility.services'
+import { LoadingSerProvider } from '../../providers/Loading';
 
 @Component({
   selector: 'page-signup',
@@ -21,30 +22,36 @@ export class SignupPage {
     public router: Router,
     public userData: UserData,
     public confService: ConfigService,
-    public toastCtrl: ToastController
-    ) {}
+    public utility: UtilityService,
+    public loading: LoadingSerProvider
+    ) {
+      this.userData.isLoggedIn().then(loggedIn => {
+        if (loggedIn === true) {
+          this.router.navigateByUrl('/createactivity')
+        }
+      })
+    }
 
   onSignup(form: NgForm) {
     this.submitted = true
 
     if (form.valid) {
-      this.confService.register(this.userInfo).subscribe((data: any) => {
-        if (data && data.code === '000000') {
-          this.notification('Signup successfully!')
-          this.userData.signup(this.userInfo.name)
-          this.router.navigateByUrl('/app/tabs/schedule')
-        } else {
-          this.notification(data.error.exception || 'error')
+      this.loading.show()
+      this.confService.register(this.userInfo).subscribe((res: any) => {
+        try {
+          if (res && res.code === '000000') {
+            this.utility.notification('Signup successfully!')
+            this.userData.signup(this.userInfo.name)
+            this.router.navigateByUrl('/createactivity')
+          } else {
+            this.utility.notification(res.error.exception || 'error')
+          }
+          this.loading.hide()
+        } catch (error) {
+          this.loading.hide()
+          this.utility.notification(error.message)
         }
       })
     }
-  }
-
-  async notification(msg: string) {
-    const toast = await this.toastCtrl.create({
-      message: msg || '',
-      duration: 3000
-    })
-    await toast.present()
   }
 }
